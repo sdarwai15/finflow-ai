@@ -28,6 +28,11 @@ const useFetch = (callback, { toastErrors = false } = {}) => {
 			try {
 				const result = await callback(...args);
 				setData(result);
+				if (toastErrors && typeof window !== 'undefined') {
+					const { toast } = await import('sonner'); // dynamically import to decouple
+					toast.success('Operation successful');
+				}
+				// Return the result for further processing if needed
 				return result;
 			} catch (err) {
 				setError(err);

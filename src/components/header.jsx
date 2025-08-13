@@ -9,8 +9,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { LayoutDashboard, PenBox } from 'lucide-react';
 
+import { checkUser } from '@/lib/auth';
 import { Button } from './ui/button';
-import { checkUser } from '@/lib/checkUser';
 
 const Header = async () => {
 	await checkUser();
