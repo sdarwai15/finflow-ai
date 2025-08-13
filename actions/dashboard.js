@@ -3,43 +3,15 @@
 import { db } from '@/lib/prisma';
 import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
+import { DASHBOARD_PATH } from '@/lib/routes';
+import { serializeAccount } from '@/lib/serializeAccount';
+import { getUserFromClerk } from '@/lib/auth';
 
 /**
- * Fetch the current user from Clerk and retrieve their account details.
- * Throw an error if the user is not authenticated or not found in the database.
- * @returns {Promise<Object>} The user object from the database.
- * @throws {Error} If the user is not authenticated or not found.
- **/
-async function getUserFromClerk() {
-	const { userId } = await auth();
-
-	if (!userId) {
-		throw new Error('Unauthorized: No User ID found');
-	}
-
-	const user = await db.user.findUnique({
-		where: { clerkUserId: userId },
-	});
-
-	if (!user) {
-		throw new Error('User not found!');
-	}
-
-	return user;
-}
-
-/**
- * Ensures Prisma Decimal values are serialized for client use
- */
-function serializeAccount(account) {
-	return {
-		...account,
-		balance: account.balance?.toNumber?.() ?? 0,
-	};
-}
-
-/**
- * Creates a new user account with optional default status.
+ * @function createAccount
+ * Creates a user account and sets it as default if it's the first
+ * @param {Object} params - Account creation payload
+ * @returns {Promise<Object>} - Result with success or error
  */
 export async function createAccount({
 	name,
@@ -51,17 +23,16 @@ export async function createAccount({
 		const user = await getUserFromClerk();
 
 		const floatBalance = parseFloat(balance);
-		if (isNaN(floatBalance)) {
-			throw new Error('Invalid balance value: must be a number');
-		}
+		if (isNaN(floatBalance))
+			throw new Error('Invalid balance: must be a valid number');
 
-		const result = await db.$transaction(async (tx) => {
+		const newAccount = await db.$transaction(async (tx) => {
 			const existingAccounts = await tx.account.findMany({
 				where: { userId: user.id },
 				select: { id: true, isDefault: true },
 			});
 
-			const shouldBeDefault = existingAccounts.length === 0 ? true : isDefault;
+			const shouldBeDefault = existingAccounts.length === 0 || isDefault;
 
 			if (shouldBeDefault) {
 				await tx.account.updateMany({
@@ -70,7 +41,7 @@ export async function createAccount({
 				});
 			}
 
-			const newAccount = await tx.account.create({
+			return tx.account.create({
 				data: {
 					name,
 					type,
@@ -79,14 +50,49 @@ export async function createAccount({
 					userId: user.id,
 				},
 			});
-
-			return newAccount;
 		});
 
-		revalidatePath('/dashboard');
-		return { success: true, data: serializeAccount(result) };
-	} catch (error) {
-		console.error('[createAccount] Error:', error);
-		return { success: false, error: error.message || 'Unknown error' };
+		revalidatePath(DASHBOARD_PATH);
+
+		return {
+			success: true,
+			data: serializeAccount(newAccount),
+		};
+	} catch (err) {
+		console.error('[createAccount] Error:', err);
+		return {
+			success: false,
+			error: err?.message || 'Unknown error during account creation',
+		};
+	}
+}
+
+/**
+ * @function getUserAccounts
+ * Fetches all accounts of the authenticated user with transaction count
+ * @returns {Promise<Object>} - Result with success or error
+ */
+export async function getUserAccounts() {
+	try {
+		const user = await getUserFromClerk();
+
+		const accounts = await db.account.findMany({
+			where: { userId: user.id },
+			orderBy: { createdAt: 'desc' },
+			include: {
+				_count: { select: { transactions: true } },
+			},
+		});
+
+		return {
+			success: true,
+			data: accounts.map(serializeAccount),
+		};
+	} catch (err) {
+		console.error('[getUserAccounts] Error:', err);
+		return {
+			success: false,
+			error: err?.message || 'Failed to fetch accounts',
+		};
 	}
 }

@@ -1,16 +1,19 @@
 import { PrismaClient } from '@/generated/prisma';
 
-let db;
+const globalForPrisma = globalThis;
 
-if (process.env.NODE_ENV === 'production') {
-	// Always create a new client in production
-	db = new PrismaClient();
-} else {
-	// Reuse client in development to avoid hot-reload issues
-	if (!global.prisma) {
-		global.prisma = new PrismaClient();
-	}
-	db = global.prisma;
+// Avoid multiple instances during dev hot-reloads
+const prisma =
+	globalForPrisma.prisma ??
+	new PrismaClient({
+		log:
+			process.env.NODE_ENV === 'development'
+				? ['query', 'error', 'warn']
+				: ['error'],
+	});
+
+if (process.env.NODE_ENV !== 'production') {
+	globalForPrisma.prisma = prisma;
 }
 
-export { db };
+export const db = prisma;
