@@ -4,15 +4,33 @@ import { Plus } from 'lucide-react';
 import React from 'react';
 import { getUserAccounts } from '../../../../actions/dashboard';
 import AccountCard from './_components/AccountCard';
+import { getCurrentBudget } from '../../../../actions/budget';
+import BudgetProgress from './_components/BudgetProgress';
 
 const DashboardPage = async () => {
 	const accounts = await getUserAccounts();
 
-	console.log('Accounts:', accounts);
+	const defaultAccount = accounts?.find((account) => account.isDefault);
+
+	let budgetData = null;
+	if (defaultAccount) {
+		const budgetResponse = await getCurrentBudget(defaultAccount.id);
+		if (budgetResponse.success) {
+			budgetData = budgetResponse.data;
+		} else {
+			console.error('Failed to fetch budget:', budgetResponse.error);
+		}
+	}
 
 	return (
-		<div>
+		<div className="space-y-8">
 			{/* BUDGET PROGRESS */}
+			{defaultAccount && (
+				<BudgetProgress
+					initialBudget={budgetData?.budget}
+					currentExpenses={budgetData?.currentExpenses || 0}
+				/>
+			)}
 
 			{/* OVERVIEW */}
 
