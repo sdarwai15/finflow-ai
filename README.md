@@ -1,4 +1,4 @@
-# Finflow AI
+# Finflow AI - [LIVE](https://finflow-ai-eight.vercel.app/)
 
 Finflow AI is a modern personal finance management platform designed to simplify how users track, categorize, and analyze their financial transactions. With a focus on user experience and leveraging AI for smart categorization, Finflow AI aims to provide users with clear insights into their spending habits. 
 
