@@ -5,7 +5,7 @@ import * as ProgressPrimitive from '@radix-ui/react-progress';
 
 import { cn } from '@/lib/utils';
 
-function Progress({ className, value, ...props }) {
+function Progress({ className, value, extraStyles, ...props }) {
 	return (
 		<ProgressPrimitive.Root
 			data-slot="progress"

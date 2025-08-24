@@ -2,7 +2,7 @@
 @import 'tw-animate-css';
 
 html {
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -136,15 +136,33 @@ html {
 }
 
 .banner-wrapper {
-	perspective: 900px
+	perspective: 900px;
 }
 
 .banner {
-  transform: rotateX(15deg) scale(1);
-  transition: transform 0.8s ease-out;
-  will-change: transform;
+	transform: rotateX(15deg) scale(1);
+	transition: transform 0.8s ease-out;
+	will-change: transform;
 }
 
 .banner.scrolled {
 	transform: rotateX(0deg) scale(1) translateY(40px);
+}
+
+@keyframes gradientMove {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+/* Add this class */
+.animate-gradient {
+	background-size: 200% 200%;
+	animation: gradientMove 3s ease infinite;
 }

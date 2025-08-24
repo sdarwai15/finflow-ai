@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Prisma
 /src/generated/prisma
+
+/package-lock.json

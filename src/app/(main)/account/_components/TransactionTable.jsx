@@ -48,7 +48,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { bulkDeleteTransactions } from '../../../../../actions/accounts';
+import { bulkDeleteTransactions } from '@/actions/accounts';
 import { BarLoader } from 'react-spinners';
 
 const RECURRING_INTERVALS = {
@@ -64,7 +64,7 @@ const TransactionTable = ({ transactions }) => {
 	const [selectedTransactions, setSelectedTransactions] = useState([]);
 	const [sortConfig, setSortConfig] = useState({
 		field: 'date',
-		direction: 'asc',
+		direction: 'desc',
 	});
 	const [searchTerm, setSearchTerm] = useState('');
 	const [typeFilter, setTypeFilter] = useState('');
@@ -366,7 +366,7 @@ const TransactionTable = ({ transactions }) => {
 												<DropdownMenuItem
 													onClick={() =>
 														router.push(
-															`/transactions/create?edit=${transaction.id}`
+															`/transaction/create?edit=${transaction.id}`
 														)
 													}
 												>

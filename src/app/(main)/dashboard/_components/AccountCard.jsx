@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import useFetch from '@/hooks/useFetch';
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-import { updateDefaultAccount } from '../../../../../actions/accounts';
+import { updateDefaultAccount } from '@/actions/accounts';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
 

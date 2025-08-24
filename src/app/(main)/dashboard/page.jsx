@@ -2,15 +2,16 @@ import CreateAccountDrawer from '@/components/CreateAccountDrawer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
 import React from 'react';
-import { getUserAccounts } from '../../../../actions/dashboard';
+import { getDashboardData, getUserAccounts } from '@/actions/dashboard';
 import AccountCard from './_components/AccountCard';
-import { getCurrentBudget } from '../../../../actions/budget';
+import { getCurrentBudget } from '@/actions/budget';
 import BudgetProgress from './_components/BudgetProgress';
+import DashboardOverview from './_components/DashboardOverview';
 
 const DashboardPage = async () => {
 	const accounts = await getUserAccounts();
 
-	const defaultAccount = accounts?.find((account) => account.isDefault);
+	const defaultAccount = accounts?.data.find((account) => account.isDefault);
 
 	let budgetData = null;
 	if (defaultAccount) {
@@ -21,6 +22,8 @@ const DashboardPage = async () => {
 			console.error('Failed to fetch budget:', budgetResponse.error);
 		}
 	}
+
+	const transactions = await getDashboardData();
 
 	return (
 		<div className="space-y-8">
@@ -33,6 +36,10 @@ const DashboardPage = async () => {
 			)}
 
 			{/* OVERVIEW */}
+			<DashboardOverview
+				accounts={accounts}
+				transactions={transactions || []}
+			/>
 
 			{/* ACCOUNTS GRID */}
 			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -1,12 +1,12 @@
 import React, { Suspense } from 'react';
-import { getAccountWithTransactions } from '../../../../../actions/accounts';
+import { getAccountWithTransactions } from '@/actions/accounts';
 import NotFound from '@/app/not-found';
 import TransactionTable from '../_components/TransactionTable';
 import { BarLoader } from 'react-spinners';
 import AccountChart from '../_components/AccountChart';
 
 const AccountPage = async ({ params }) => {
-	const accountData = await getAccountWithTransactions(params.id);
+	const accountData = await getAccountWithTransactions((await params)?.id);
 
 	if (!accountData) {
 		return <NotFound />;
