@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<ClerkProvider>
-			<html lang="en">
+			<html lang="en" suppressHydrationWarning={true}>
 				<BodyWrapper>
 					{/* HEADER */}
 					<Header />
@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
 
 					{/* TOASTER */}
 					<Toaster />
-					
+
 					{/* FOOTER */}
 					<footer className="bg-blue-50 py-12">
 						<div className="container px-4 mx-auto text-center text-gray-600">

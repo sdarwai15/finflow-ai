@@ -5,7 +5,7 @@ import { Pencil, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 import useFetch from '@/hooks/useFetch';
-import { updateBudget } from '../../../../../actions/budget';
+import { updateBudget } from '@/actions/budget';
 
 import {
 	Card,
@@ -18,7 +18,7 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-export function BudgetProgress({ initialBudget, currentExpenses }) {
+const BudgetProgress = ({ initialBudget, currentExpenses }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [newBudget, setNewBudget] = useState(
 		initialBudget?.amount?.toString() ?? ''
@@ -26,7 +26,7 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
 
 	const {
 		loading: isLoading,
-		fn: updateBudgetFn,
+		execute: updateBudgetFn,
 		data: updatedBudget,
 		error,
 	} = useFetch(updateBudget);
@@ -160,3 +160,5 @@ export function BudgetProgress({ initialBudget, currentExpenses }) {
 		</Card>
 	);
 }
+
+export default BudgetProgress;

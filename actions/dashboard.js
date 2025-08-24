@@ -1,7 +1,6 @@
 'use server';
 
 import { db } from '@/lib/prisma';
-import { auth } from '@clerk/nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { DASHBOARD_PATH } from '@/lib/routes';
 import { serializeAccount } from '@/lib/serializeAccount';
@@ -95,4 +94,21 @@ export async function getUserAccounts() {
 			error: err?.message || 'Failed to fetch accounts',
 		};
 	}
+}
+
+/**
+ * @function getDashboardData
+ * Fetches all transactions for the authenticated user in descending order
+ * @returns {Promise<Object>} - Result with success or error
+ */
+export async function getDashboardData() {
+	const user = await getUserFromClerk();
+
+	// Get all user transactions
+	const transactions = await db.transaction.findMany({
+		where: { userId: user.id },
+		orderBy: { date: 'desc' },
+	});
+
+	return transactions.map(serializeAccount);
 }
