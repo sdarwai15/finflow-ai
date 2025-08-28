@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import CreateAccountDrawer from '@/components/CreateAccountDrawer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
