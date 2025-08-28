@@ -7,6 +7,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 const CRON_DAILY = '0 0 * * *'; // Every day at midnight
 const CRON_MONTHLY = '0 0 1 * *'; // First day of every month at midnight
 const CRON_BUDGET_ALERT = '0 */6 * * *'; // Every 6 hours
+const CRON_SUPABASE_PING = '0 0 * * 0'; // Every 7 days (Sunday midnight)
 const BUDGET_ALERT_THRESHOLD = 80; // %
 
 // Utility functions
@@ -367,5 +368,25 @@ export const checkBudgetAlerts = inngest.createFunction(
 				}
 			});
 		}
+	}
+);
+
+export const pingSupabase = inngest.createFunction(
+	{
+		id: 'ping-supabase-db',
+		name: 'Ping Supabase DB',
+	},
+	{ cron: CRON_SUPABASE_PING },
+	async ({ step }) => {
+		return await step.run('ping-db', async () => {
+			try {
+				// Minimal DB query just to keep it alive
+				const count = await db.user.count({ take: 1 });
+				return { status: 'ok', count };
+			} catch (error) {
+				console.error('Supabase ping failed:', error);
+				return { status: 'error', message: error.message };
+			}
+		});
 	}
 );
