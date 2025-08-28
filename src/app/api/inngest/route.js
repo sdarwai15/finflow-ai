@@ -6,6 +6,7 @@ import {
 	generateMonthlyReports,
 	processRecurringTransaction,
 	triggerRecurringTransactions,
+	pingSupabase,
 } from '@/lib/inngest/functions';
 
 export const { GET, POST, PUT } = serve({
@@ -15,5 +16,6 @@ export const { GET, POST, PUT } = serve({
 		triggerRecurringTransactions,
 		generateMonthlyReports,
 		checkBudgetAlerts,
+		pingSupabase,
 	],
 });
