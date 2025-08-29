@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import React from 'react';
 import { getUserAccounts } from '@/actions/dashboard';
 import AddTransactionForm from '../_components/AddTransactionForm';
