@@ -5,7 +5,6 @@ import { db } from '@/lib/prisma';
 import { DASHBOARD_PATH } from '@/lib/routes';
 import { serializeAccount } from '@/lib/serializeAccount';
 import { getUserFromClerk } from '@/src/lib/auth';
-import { request } from '@arcjet/next';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { revalidatePath } from 'next/cache';
 
@@ -39,8 +38,7 @@ export async function createTransaction(data) {
 		const user = await getUserFromClerk();
 
 		// Rate Limiting with ArcJet
-		const req = await request();
-		const decision = await aj.protect(req, { userId: user.id, requested: 1 });
+		const decision = await aj.protect({ userId: user.id, requested: 1 });
 
 		if (decision.isDenied()) {
 			if (decision.reason.isRateLimit()) {
