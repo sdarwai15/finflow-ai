@@ -15,7 +15,7 @@
 		"postinstall": "prisma generate"
 	},
 	"dependencies": {
-		"@arcjet/next": "^1.0.0-beta.10",
+		"@arcjet/node": "^1.0.0-beta.16",
 		"@clerk/nextjs": "^6.23.1",
 		"@google/generative-ai": "^0.24.1",
 		"@hookform/resolvers": "^5.1.1",
@@ -36,7 +36,7 @@
 		"date-fns": "^4.1.0",
 		"inngest": "^3.40.1",
 		"lucide-react": "^0.525.0",
-		"next": "15.3.4",
+		"next": "^15.3.6",
 		"next-themes": "^0.4.6",
 		"react": "^19.0.0",
 		"react-day-picker": "^9.7.0",
