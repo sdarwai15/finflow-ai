@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 import Header from '@/components/header';
